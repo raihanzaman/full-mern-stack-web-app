@@ -3,6 +3,7 @@ const express = require('express') // CommonJS import style!
 const morgan = require('morgan') // middleware for nice logging of incoming HTTP requests
 const cors = require('cors') // middleware for enabling CORS (Cross-Origin Resource Sharing) requests.
 const mongoose = require('mongoose')
+const path = require('path')
 
 const app = express() // instantiate an Express object
 app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' })) // log all incoming requests, except when in unit test mode.  morgan has a few logging default styles - dev is a nice concise color-coded style
@@ -11,6 +12,9 @@ app.use(cors()) // allow cross-origin resource sharing
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()) // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })) // decode url-encoded incoming POST data
+
+// serve files placed in back-end/public (for example, public/raihan.jpg)
+app.use(express.static(path.join(__dirname, 'public')))
 
 // connect to database
 mongoose
@@ -21,6 +25,21 @@ mongoose
 // load the dataabase models we want to deal with
 const { Message } = require('./models/Message')
 const { User } = require('./models/User')
+
+// a route to handle fetching the About Us page content
+app.get('/about', (req, res) => {
+  res.json({
+    title: 'About Us',
+    name: 'Raihan Zaman',
+    imageUrl: `${req.protocol}://${req.get('host')}/raihan.jpg`,
+    imageAlt: 'Photo of Raihan Zaman',
+    paragraphs: [
+      "My name is Raihan Zaman, and I am a junior at New York University studying Business and Computer Science. I was born and raised in Queens, NY. Living in the city is both amazing and terrible at the same time. While there is endless things to enjoy, the fast-paced lifestyle can sometimes lead to very stressful weeks.",
+      "Some of my hobbies/interests include watching and playing sports (Basketball and American Football are my favorites), weightlifting, and listening to music. I also enjoy traveling with family and friends. Recently, I've traveled to Florida, Maine, and Toronto. I'm planning to study abroad at London next semester, and I hope to travel to many countries during my time there."
+    ],
+    status: 'all good',
+  })
+})
 
 // a route to handle fetching all messages
 app.get('/messages', async (req, res) => {

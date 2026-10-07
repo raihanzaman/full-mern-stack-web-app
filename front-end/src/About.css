@@ -1,0 +1,27 @@
+.About {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.About h1 {
+  margin-bottom: 1rem;
+}
+
+.About-photo {
+  display: block;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 0.75rem;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.About p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.About-error {
+  color: red;
+}
